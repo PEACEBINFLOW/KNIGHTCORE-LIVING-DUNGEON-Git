@@ -1,0 +1,15 @@
+{
+  "knights": [
+    { "name": "Valdr", "rune": "ᚠ" },
+    { "name": "Sigrid", "rune": "ᚹ" },
+    { "name": "Bjorn", "rune": "ᚨ" },
+    { "name": "Kára", "rune": "ᛊ" },
+    { "name": "Eira", "rune": "ᚲ" },
+    { "name": "Ragnar", "rune": "ᚱ" },
+    { "name": "Freya", "rune": "ᛉ" },
+    { "name": "Thorin", "rune": "ᚦ" },
+    { "name": "Aldric", "rune": "ᛏ" },
+    { "name": "Sylva", "rune": "ᛟ" },
+    { "name": "Hilde", "rune": "ᛗ" }
+  ]
+}
