@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KNIGHTCORE · LIVING DUNGEON</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="./render/theme.css">
+</head>
+<body>
+  <div id="app">
+    <header id="title-bar">
+      ⚔ KNIGHT<span class="blood">CORE</span> · LIVING DUNGEON · AUTONOMOUS ECOSYSTEM ⚔
+    </header>
+
+    <div id="layout">
+      <main id="map-panel">
+        <div id="controls"></div>
+        <div id="map-container"></div>
+      </main>
+
+      <aside id="side-panel">
+        <section id="core-section">
+          <div class="section-header"><span>DUNGEON CORE</span></div>
+          <div id="core-badge-row"></div>
+          <div id="core-meters"></div>
+        </section>
+
+        <section id="knights-section">
+          <div class="section-header">
+            <span>KNIGHTS</span>
+            <span id="knight-count" class="badge">0</span>
+          </div>
+          <div id="knight-list"></div>
+        </section>
+
+        <section id="monsters-section">
+          <div class="section-header">
+            <span>MONSTERS</span>
+            <span id="monster-count" class="badge">0</span>
+          </div>
+          <div id="monster-list"></div>
+        </section>
+
+        <section id="chronicle-section">
+          <div class="section-header"><span>CHRONICLE</span></div>
+          <div id="chronicle"></div>
+        </section>
+      </aside>
+    </div>
+
+    <div id="status-window" class="hidden"></div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
