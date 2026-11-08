@@ -19,10 +19,15 @@
     "idle"
   ],
   "scripts": {
-    "test": "node --test tests/",
-    "headless": "node tools/headless.js",
+    "test": "node --test",
+    "preflight": "node tools/preflight.js",
     "build": "node tools/build-single.js",
-    "dev": "node tools/serve.js"
+    "build:multi": "node tools/build-single.js --mode=multi",
+    "verify": "node tools/verify-dist.js",
+    "ci": "npm run preflight && npm test && npm run build && npm run verify",
+    "preview": "node tools/serve.js --dist",
+    "dev": "node tools/serve.js",
+    "headless": "node tools/headless.js"
   },
   "devDependencies": {
     "esbuild": "^0.20.2"
