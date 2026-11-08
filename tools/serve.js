@@ -1,15 +1,12 @@
 // tools/serve.js
-//
-// Tiny static dev server using Node's built-in http. Zero dependencies.
-// Serves the repo root so `fetch('../data/*.json')` from src/main.js works.
-// `/` redirects to `/src/` so relative paths inside index.html resolve.
-
 import { createServer } from 'node:http';
 import { readFileSync, statSync } from 'node:fs';
 import { join, extname, normalize, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = normalize(dirname(fileURLToPath(import.meta.url)) + '/..');
+const REPO_ROOT = normalize(dirname(fileURLToPath(import.meta.url)) + '/..');
+const SERVE_DIST = process.argv.includes('--dist');
+const ROOT = SERVE_DIST ? join(REPO_ROOT, 'dist') : REPO_ROOT;
 const PORT = Number(process.env.PORT) || 8080;
 
 const MIME = {
@@ -40,9 +37,13 @@ const server = createServer((req, res) => {
   }
 
   if (urlPath === '/' || urlPath === '') {
-    res.writeHead(302, { Location: '/src/' });
-    res.end();
-    return;
+    if (SERVE_DIST) {
+      urlPath = '/index.html';
+    } else {
+      res.writeHead(302, { Location: '/src/' });
+      res.end();
+      return;
+    }
   }
   if (urlPath === '/src') {
     res.writeHead(302, { Location: '/src/' });
@@ -80,5 +81,5 @@ const server = createServer((req, res) => {
 
 server.listen(PORT, () => {
   console.log(`KNIGHTCORE dev server → http://localhost:${PORT}/`);
-  console.log(`(repo root: ${ROOT})`);
+  console.log(`(serving ${SERVE_DIST ? 'dist/' : 'repo root'})`);
 });
