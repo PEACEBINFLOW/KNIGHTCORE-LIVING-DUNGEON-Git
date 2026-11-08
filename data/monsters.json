@@ -1,0 +1,35 @@
+{
+  "D": [
+    { "name": "Plague Rat", "emoji": "🐀", "hp": 30, "atk": 6, "xp": 18, "gold": 8 },
+    { "name": "Cave Spider", "emoji": "🕷", "hp": 35, "atk": 8, "xp": 22, "gold": 10 },
+    { "name": "Tomb Bat", "emoji": "🦇", "hp": 25, "atk": 5, "xp": 15, "gold": 7 },
+    { "name": "Venom Asp", "emoji": "🐍", "hp": 40, "atk": 10, "xp": 28, "gold": 12 },
+    { "name": "Dread Roach", "emoji": "🪳", "hp": 22, "atk": 4, "xp": 12, "gold": 5 }
+  ],
+  "C": [
+    { "name": "Feral Wolf", "emoji": "🐺", "hp": 65, "atk": 16, "xp": 45, "gold": 22 },
+    { "name": "Stone Scorpion", "emoji": "🦂", "hp": 70, "atk": 18, "xp": 52, "gold": 28 },
+    { "name": "Rune Boar", "emoji": "🐗", "hp": 80, "atk": 14, "xp": 48, "gold": 25 },
+    { "name": "Storm Hawk", "emoji": "🦅", "hp": 55, "atk": 20, "xp": 55, "gold": 30 },
+    { "name": "Shard Lizard", "emoji": "🦎", "hp": 60, "atk": 15, "xp": 42, "gold": 20 }
+  ],
+  "B": [
+    { "name": "Shadow Tiger", "emoji": "🐅", "hp": 120, "atk": 28, "xp": 90, "gold": 55 },
+    { "name": "Iron Gorilla", "emoji": "🦍", "hp": 140, "atk": 25, "xp": 85, "gold": 50 },
+    { "name": "Abyss Croc", "emoji": "🐊", "hp": 150, "atk": 30, "xp": 100, "gold": 60 },
+    { "name": "Void Shark", "emoji": "🦈", "hp": 130, "atk": 32, "xp": 95, "gold": 58 },
+    { "name": "Lesser Drake", "emoji": "🐉", "hp": 160, "atk": 35, "xp": 110, "gold": 70 }
+  ],
+  "A": [
+    { "name": "Stone Ogre", "emoji": "👹", "hp": 250, "atk": 45, "xp": 180, "gold": 120 },
+    { "name": "Demon Lord", "emoji": "👺", "hp": 280, "atk": 50, "xp": 200, "gold": 140 },
+    { "name": "Ancient Beast", "emoji": "🦖", "hp": 320, "atk": 48, "xp": 220, "gold": 150 },
+    { "name": "Elder Dragon", "emoji": "🐲", "hp": 350, "atk": 55, "xp": 250, "gold": 180 }
+  ],
+  "S": [
+    { "name": "Arch Demon", "emoji": "😈", "hp": 500, "atk": 80, "xp": 400, "gold": 300 },
+    { "name": "Death Lord", "emoji": "💀", "hp": 600, "atk": 90, "xp": 450, "gold": 350 },
+    { "name": "Abyss Watcher", "emoji": "👁", "hp": 700, "atk": 100, "xp": 500, "gold": 400 },
+    { "name": "World Eater", "emoji": "🌋", "hp": 900, "atk": 120, "xp": 600, "gold": 500 }
+  ]
+}
