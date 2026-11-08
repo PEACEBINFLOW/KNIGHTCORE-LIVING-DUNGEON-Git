@@ -1,76 +1,75 @@
-name: CI / Deploy
+name: Knightcore CI / Deploy
 
 on:
   push:
-    branches: ["**"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["**"]
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: pages
+  group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Runs on every push to every branch, and on every PR.
+  # 1. Runs tests on every push/PR to main
   test:
     name: Test (Node 20)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # No package-lock.json is committed yet, so `npm ci` cannot be used.
-      # Once you commit a lockfile, replace this with: npm ci
-      - name: Install
+      - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Test
+      - name: Run tests
         run: npm test
 
-  # Only on main (or a manual dispatch from main).
+  # 2. Builds the single-file HTML game
   build:
-    name: Build single-file bundle
+    name: Build Game
     needs: test
-    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install
+      - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Build
+      - name: Build single-file bundle
         run: npm run build
+
+      # This proves exactly what files are being sent to GitHub Pages
+      - name: Verify Build Output
+        run: ls -la dist/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
-  # Deploys the artifact built above.
+  # 3. Deploys ONLY the dist/ folder to Pages
   deploy:
-    name: Deploy
+    name: Deploy Game
     needs: build
-    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
