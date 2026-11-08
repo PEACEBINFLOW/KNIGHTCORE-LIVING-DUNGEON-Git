@@ -1,0 +1,102 @@
+{
+  "map": {
+    "width": 860,
+    "height": 580
+  },
+
+  "startKnights": 8,
+  "rankOrder": ["D", "C", "B", "A", "S"],
+
+  "rankThresholds": {
+    "D": 6,
+    "C": 13,
+    "B": 21,
+    "A": 36
+  },
+
+  "xpCurve": {
+    "base": 80,
+    "growth": 1.25
+  },
+
+  "knight": {
+    "startLevel": 1,
+    "startXp": 0,
+    "startGold": 0,
+    "startKills": 0,
+    "spawnJitter": 12,
+    "retreatHpFraction": 0.28,
+    "retreatSpeed": 2,
+    "retreatHeal": 15,
+    "campRestRadius": 45,
+    "campRestHeal": 0.6,
+    "arriveRadius": 8,
+    "speedBase": 1.4,
+    "speedPerSpd": 0.008,
+    "auraRegenScale": 0.015
+  },
+
+  "combat": {
+    "minStrike": 5,
+    "strikeLevelScale": 2,
+    "minInterval": 14,
+    "intervalBase": 28,
+    "intervalSpdScale": 0.15,
+    "ambushRadius": 22
+  },
+
+  "monsterScaling": {
+    "fromAvgLevel": 1,
+    "perAvgLevel": 0.08
+  },
+
+  "population": {
+    "spawnIntervalMs": 3500,
+    "maxMonsters": 40,
+    "baseCount": 3,
+    "perAvgLevel": 0.85,
+    "weights": {
+      "D": { "D": 1 },
+      "C": { "C": 0.65, "D": 0.35 },
+      "B": { "B": 0.45, "C": 0.3, "D": 0.25 },
+      "A": { "A": 0.35, "B": 0.3, "C": 0.35 },
+      "S": { "S": 0.25, "A": 0.3, "B": 0.45 }
+    },
+    "zoneByRank": {
+      "D": ["z1", "z2", "z3"],
+      "C": ["z2", "z3", "z4", "z5"],
+      "B": ["z4", "z5", "z6", "z7"],
+      "A": ["z6", "z7", "z8"],
+      "S": ["z7", "z8", "z9"]
+    }
+  },
+
+  "dungeonCore": {
+    "energyRegen": 0.2,
+    "energyDrainPerMonster": 0.05,
+    "corruptionBase": 10,
+    "corruptionPerBoss": 8,
+    "corruptionPerAvgLevel": 1.2,
+    "energy": 100,
+    "corruption": 10,
+    "hunger": 30,
+    "pressure": 0,
+    "bossesDefeated": 0,
+    "dominantRank": "D",
+    "eliteCorruptionThreshold": 60,
+    "eliteChance": 0.3,
+    "bossKillEnergyCost": 20,
+    "bossKillCorruptionGain": 5,
+    "bossRanks": ["A", "S"],
+    "stateThresholds": {
+      "hunger": 70,
+      "corruption": 70,
+      "pressure": 70,
+      "energyLow": 30
+    }
+  },
+
+  "chronicle": {
+    "maxEntries": 200
+  }
+}
