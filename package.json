@@ -1,0 +1,30 @@
+{
+  "name": "knightcore-living-dungeon",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "KNIGHTCORE · LIVING DUNGEON — a fully autonomous, deterministic RPG ecosystem that runs itself.",
+  "license": "MIT",
+  "author": "Peace Thabiwa (PEACEBINFLOW) — SAGEWORKS AI",
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "simulation",
+    "autonomous",
+    "rpg",
+    "deterministic",
+    "canvas",
+    "svg",
+    "idle"
+  ],
+  "scripts": {
+    "test": "node --test tests/",
+    "headless": "node tools/headless.js",
+    "build": "node tools/build-single.js",
+    "dev": "node tools/serve.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.2"
+  }
+}
