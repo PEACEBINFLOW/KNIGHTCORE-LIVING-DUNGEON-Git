@@ -1,120 +1,60 @@
-// src/core/stats.js
-//
-// Knight stat block, derived combat values, body traits, aura traits, letter
-// grades, and knight rank. All derived values are floored per the spec.
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import {
+  gradeOf,
+  rankOfLevel,
+  KnightStats,
+  computeDerived,
+  computeBodyTraits,
+} from '../src/core/stats.js';
 
-export const RANK_COLORS = {
-  SS: '#ff8800',
-  S: '#ff3322',
-  A: '#cc4488',
-  B: '#c8a030',
-  C: '#60aacc',
-  D: '#70aa60',
-  E: '#666',
-  F: '#444',
-};
-
-/**
- * Letter grade for a numeric stat value.
- * @param {number} v
- * @returns {'SS'|'S'|'A'|'B'|'C'|'D'|'E'|'F'}
- */
-export function gradeOf(v) {
-  if (v >= 95) return 'SS';
-  if (v >= 80) return 'S';
-  if (v >= 65) return 'A';
-  if (v >= 50) return 'B';
-  if (v >= 35) return 'C';
-  if (v >= 20) return 'D';
-  if (v >= 10) return 'E';
-  return 'F';
+function mockRng() {
+  return { int: () => 0 };
 }
 
-/**
- * Knight rank from level and the configured thresholds.
- * @param {number} level
- * @param {{ D: number, C: number, B: number, A: number }} thresholds
- * @returns {'D'|'C'|'B'|'A'|'S'}
- */
-export function rankOfLevel(level, thresholds) {
-  if (level < thresholds.D) return 'D';
-  if (level < thresholds.C) return 'C';
-  if (level < thresholds.B) return 'B';
-  if (level < thresholds.A) return 'A';
-  return 'S';
-}
+test('gradeOf boundaries', () => {
+  assert.equal(gradeOf(9), 'F');
+  assert.equal(gradeOf(10), 'E');
+  assert.equal(gradeOf(19), 'E');
+  assert.equal(gradeOf(20), 'D');
+  assert.equal(gradeOf(35), 'C');
+  assert.equal(gradeOf(50), 'B');
+  assert.equal(gradeOf(65), 'A');
+  assert.equal(gradeOf(80), 'S');
+  assert.equal(gradeOf(94), 'S');
+  assert.equal(gradeOf(95), 'SS');
+});
 
-/**
- * Base stat block rolled at knight creation.
- */
-export class KnightStats {
-  /** @param {{ int: (min: number, max: number) => number }} rng */
-  constructor(rng) {
-    this.STR = 15 + rng.int(0, 19);
-    this.AGI = 15 + rng.int(0, 19);
-    this.VIT = 15 + rng.int(0, 19);
-    this.AUR = 12 + rng.int(0, 19);
-    this.INT = 12 + rng.int(0, 17);
-  }
+test('rankOfLevel thresholds', () => {
+  const t = { D: 6, C: 13, B: 21, A: 36 };
+  assert.equal(rankOfLevel(1, t), 'D');
+  assert.equal(rankOfLevel(5, t), 'D');
+  assert.equal(rankOfLevel(6, t), 'C');
+  assert.equal(rankOfLevel(12, t), 'C');
+  assert.equal(rankOfLevel(13, t), 'B');
+  assert.equal(rankOfLevel(20, t), 'B');
+  assert.equal(rankOfLevel(21, t), 'A');
+  assert.equal(rankOfLevel(35, t), 'A');
+  assert.equal(rankOfLevel(36, t), 'S');
+});
 
-  /** Apply the fixed level-up increments. */
-  levelUp() {
-    this.STR += 2;
-    this.AGI += 1;
-    this.VIT += 2;
-    this.AUR += 1;
-    this.INT += 1;
-  }
-}
+test('computeDerived formula', () => {
+  const d = computeDerived({ STR: 20, AGI: 10, VIT: 10, AUR: 10, INT: 10 });
+  assert.equal(d.ATK, 34); // 20*1.5 + 10*0.4 = 30 + 4
+});
 
-/**
- * Derived combat stats. All values floored.
- * @param {{ STR: number, AGI: number, VIT: number, AUR: number, INT: number }} s
- */
-export function computeDerived(s) {
-  const { STR, AGI, VIT, AUR, INT } = s;
-  return {
-    ATK: Math.floor(STR * 1.5 + AGI * 0.4),
-    DEF: Math.floor(VIT * 1.4 + STR * 0.3),
-    SPD: Math.floor(AGI * 1.3),
-    DODGE: Math.floor(AGI * 0.7 + INT * 0.3),
-    PARRY: Math.floor(AGI * 0.4 + STR * 0.5 + INT * 0.2),
-    BLOCK: Math.floor(STR * 0.8 + VIT * 0.6),
-    STAMINA: Math.floor(VIT * 2 + STR * 0.5),
-    maxHP: Math.floor(VIT * 12 + STR * 4),
-    maxAura: Math.floor(AUR * 10 + INT * 5),
-    AURA_REGEN: Math.floor(AUR * 0.6 + VIT * 0.2),
-  };
-}
+test('KnightStats.levelUp increments', () => {
+  const s = new KnightStats(mockRng());
+  const before = { STR: s.STR, AGI: s.AGI, VIT: s.VIT, AUR: s.AUR, INT: s.INT };
+  s.levelUp();
+  assert.equal(s.STR, before.STR + 2);
+  assert.equal(s.AGI, before.AGI + 1);
+  assert.equal(s.VIT, before.VIT + 2);
+  assert.equal(s.AUR, before.AUR + 1);
+  assert.equal(s.INT, before.INT + 1);
+});
 
-/**
- * Body traits. ENDURANCE is null unless VIT > 40 and STR > 30.
- * @param {{ STR: number, AGI: number, VIT: number, AUR: number, INT: number }} s
- */
-export function computeBodyTraits(s) {
-  const { STR, AGI, VIT, AUR, INT } = s;
-  return {
-    VISION: Math.floor(INT * 0.8 + AUR * 0.4),
-    LUNG: Math.floor(VIT * 0.7 + STR * 0.3),
-    GRIP: Math.floor(STR * 1.2),
-    BALANCE: Math.floor(AGI * 0.6 + VIT * 0.4),
-    REFLEX: Math.floor(AGI * 0.8 + INT * 0.5),
-    ENDURANCE:
-      VIT > 40 && STR > 30 ? Math.floor(VIT * 1.2 + STR * 0.5) : null,
-  };
-}
-
-/**
- * Aura traits. AURA_VISION and AURA_PRESSURE are conditional.
- * @param {{ STR: number, AGI: number, VIT: number, AUR: number, INT: number }} s
- */
-export function computeAuraTraits(s) {
-  const { AGI, VIT, AUR, INT } = s;
-  return {
-    AURA_VISION:
-      AUR > 45 && INT > 40 ? Math.floor(AUR * 0.8 + INT * 0.7) : null,
-    AURA_PRESSURE: AUR > 50 ? Math.floor(AUR * 1.3) : null,
-    AURA_INSTINCT: Math.floor(AGI * 0.6 + AUR * 0.7),
-    FLOW: Math.floor(AUR * 0.8 + VIT * 0.4),
-  };
-}
+test('computeBodyTraits ENDURANCE condition', () => {
+  const b = computeBodyTraits({ STR: 20, AGI: 20, VIT: 40, AUR: 20, INT: 20 });
+  assert.equal(b.ENDURANCE, null); // VIT is exactly 40, condition is > 40
+});
