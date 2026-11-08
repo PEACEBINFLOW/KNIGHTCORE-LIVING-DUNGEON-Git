@@ -9,12 +9,8 @@
 import { EventBus } from './events.js';
 import { createRng } from './rng.js';
 import { buildGraph } from './graph.js';
-import { KnightStats } from './stats.js';
-import {
-  Knight,
-  updateKnight,
-  combatInterval,
-} from './knight.js';
+import { KnightStats, rankOfLevel } from './stats.js';
+import { Knight, updateKnight, combatInterval } from './knight.js';
 import { DungeonCore } from './dungeonCore.js';
 import { PopulationController } from './population.js';
 
@@ -59,8 +55,6 @@ export class World {
     this._spawnKnights();
     this._initialSpawn();
   }
-
-  // -------------------------------------------------------------- spawning
 
   _spawnKnights() {
     const b = this.data.balance;
@@ -116,8 +110,6 @@ export class World {
     return sum / this.knights.length;
   }
 
-  // ------------------------------------------------------------------ step
-
   /**
    * Advance the world by one fixed step.
    * The parameter exists for API compatibility; one call = one fixed step
@@ -134,38 +126,30 @@ export class World {
     const avgLevel = this.avgKnightLevel();
     const target = this.population.targetMonsterCount(avgLevel);
 
-    // 1. Core reads the world.
     this.core.update(this.monsters, this.knights, avgLevel, target);
 
-    // 2. Knights act.
     for (const k of this.knights) updateKnight(this, k);
 
-    // 3. Monsters wander + ambush (skip dead monsters killed in step 2).
     for (const m of this.monsters) {
       if (m.hp <= 0) continue;
       this._updateMonster(m);
     }
 
-    // 4. Population controller.
     this.populationTicks += 1;
     if (this.populationTicks >= SPAWN_INTERVAL_TICKS) {
       this.populationTicks = 0;
       this.spawnMonster();
     }
 
-    // 5. Remove dead monsters.
     for (let i = this.monsters.length - 1; i >= 0; i--) {
       if (this.monsters[i].hp <= 0) this.monsters.splice(i, 1);
     }
   }
 
-  // -------------------------------------------------------------- monsters
-
   _updateMonster(m) {
     const room = this.roomsById.get(m.roomId);
     if (!room) return;
 
-    // Wander with a simple bounce.
     m.x += m.vx;
     m.y += m.vy;
     const pad = 8;
@@ -178,7 +162,6 @@ export class World {
       m.vy = this.rng.float(-0.4, 0.4);
     }
 
-    // Ambush a nearby knight that isn't already fighting and isn't retreating.
     const cb = this.data.balance.combat;
     const kb = this.data.balance.knight;
     for (const k of this.knights) {
@@ -200,13 +183,12 @@ export class World {
     }
   }
 
-  // -------------------------------------------------------------- snapshot
-
   /**
    * Plain JSON-safe snapshot. No functions, no Maps, no undefined.
    * @returns {object}
    */
   snapshot() {
+    const thresholds = this.data.balance.rankThresholds;
     return {
       tick: this.tickCount,
       seed: this.seed,
@@ -217,6 +199,7 @@ export class World {
         name: k.name,
         rune: k.rune,
         level: k.level,
+        rank: rankOfLevel(k.level, thresholds),
         xp: k.xp,
         xpNext: k.xpNext,
         gold: k.gold,
